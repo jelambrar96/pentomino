@@ -6,6 +6,7 @@
 #include <ostream>
 #include <vector>
 #include <iostream>
+#include <bitset>
 
 #include "Point.h"
 
@@ -19,6 +20,7 @@ class Shape
         Point points[5];
         char type;
         void display();
+        int code;
 
     protected:
 
