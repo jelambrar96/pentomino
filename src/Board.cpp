@@ -34,11 +34,63 @@ Board::~Board() {
 }
 
 bool Board::addShape(Shape s, int x, int y) {
-    return false;
+    std::vector<Point> new_points;
+    bool flag = true;
+    for (Point p: s.points) {
+        int _x = x + p.x;
+        int _y = y + p.y;
+        if (_x < 0) {
+            flag = false;
+        }
+        if (_x >= _m) {
+            flag = false;
+        }
+        if (_y < 0) {
+            flag = false;
+        }
+        if (_y >= _n) {
+            flag = false;
+        }
+        if (!flag) { break; }
+        new_points.push_back(Point(x, y));
+    }
+    if (!flag) {
+        return false;
+    }
+    for (Point p: new_points) {
+        _board[p.y * _n + p.x] = s.type;
+    }
+    return true;
 }
 
 bool Board::removeShape(Shape s, int  x, int y) {
-    return false;
+    std::vector<Point> new_points;
+    bool flag = true;
+    for (Point p: s.points) {
+        int _x = x + p.x;
+        int _y = y + p.y;
+        if (_x < 0) {
+            flag = false;
+        }
+        if (_x >= _m) {
+            flag = false;
+        }
+        if (_y < 0) {
+            flag = false;
+        }
+        if (_y >= _n) {
+            flag = false;
+        }
+        if (!flag) { break; }
+        new_points.push_back(Point(x, y));
+    }
+    if (!flag) {
+        return false;
+    }
+    for (Point p: new_points) {
+        _board[p.y * _n + p.x] = EMPTY_CHAR;
+    }
+    return true;
 }
 
 // ----------------------------------------------------------------------------
