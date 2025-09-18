@@ -1,6 +1,7 @@
 #ifndef PENTOSHAPE_H
 #define PENTOSHAPE_H
 
+#include <iostream>
 
 class PentoShapeFactory {
 public:
@@ -11,6 +12,9 @@ public:
 
     static int getShapes(char c);
     static int getNUmbers(char c);
+
+    static void displayShapes();
+
 
 private:
 };

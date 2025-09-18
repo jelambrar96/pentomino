@@ -5,6 +5,10 @@
 int main() {
 
 
+    // PentoShapeFactory::displayShapes();
+
+    // return 0;
+
     int h = 3;
     int w = 20;
     int n_shapes = 12;
