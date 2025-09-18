@@ -9,7 +9,6 @@ project (pentomino)
 # Create a sources variable with a link to all cpp files to compile
 file(GLOB helloworld_SRC
      "src/*.cpp"
-     "main.cpp"
 )
 
 # Add an executable with the above sources
