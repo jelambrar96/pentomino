@@ -1,72 +1,24 @@
-#include "Shape.h"
+#include "Shape.hpp"
 
 
-Shape::Shape(char _type, Point *_points)
-{
+Shape::Shape(char _type, Point *_points, Point _position) {
     //ctor
     type = _type;
     // points = new Point[N_POINTS];
-    for (int i=0; i < N_POINTS; ++i) { points[i] = Point(_points[i]); }
-    code = 0x00000000;
     for (int i=0; i < N_POINTS; ++i) {
-        // get x and y
-        int x = points[i].x + 2;
-        int y = points[i].y + 2;
-        // get number of rotations
-        int ind = y * 5 + x;
-        int temp = 1;
-        temp <<= ind;
-        code |= temp;
+        points[i] = Point(_points[i].x, _points[i].y);
     }
+    position = _position;
 }
 
 
-Shape::Shape(char _type, std::initializer_list<Point> _points)
-{
-    //ctor
-    type = _type;
-    // points = new Point[N_POINTS];
-
-    std::vector<Point> v;
-    v.insert(v.begin(), _points.begin(), _points.end());
-    for (int i=0; i < N_POINTS; ++i) { points[i] = Point(v[i]); }
-    code = 0x00000000;
-    for (int i=0; i < N_POINTS; ++i) {
-        // get x and y
-        int x = points[i].x + 2;
-        int y = points[i].y + 2;
-        // get number of rotations
-        int ind = y * 5 + x;
-        int temp = 1;
-        temp <<= ind;
-        code |= temp;
-    }
-}
-
-
-Shape::~Shape()
-{
+Shape::~Shape() {
     //dtor
     // if (points != nullptr) { delete [] points };
     //  delete [] points;
     // points = nullptr; 
     // std::cout << "dtor\n";
 }
-
-
-std::ostream& operator<<(std::ostream &strm, const Shape &s) {
-    std::bitset<32> x(s.code);
-    return strm << "Shape " << s.type << "\nPoints:\n"
-        << s.points[0] << "\n"
-        << s.points[1] << "\n"
-        << s.points[2] << "\n"
-        << s.points[3] << "\n"
-        << s.points[4] << "\n"
-        << "code: " << s.code << " "
-        << x << "\n";
-;
-}
-
 
 void Shape::display_shape(Shape *s) {
     char single_board[N_POINTS][N_POINTS];
@@ -88,6 +40,8 @@ void Shape::display_shape(Shape *s) {
     }
 }
 
-void Shape::display() {
-    Shape::display_shape(this);
-}
+
+// Shape ShapeFactory::arrayShapes[1] = {
+//     Shape::Shape('x', { Point(0, 0), Point(0, 0), Point(0, 0), Point(0, 0), Point(0, 0)})
+// };
+

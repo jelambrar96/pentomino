@@ -1,20 +1,17 @@
-#include "Point.h"
+#include "Point.hpp"
 
-Point::Point(int _x, int _y): x(_x), y(_y)
-{
-    //ctor
+Point::Point() {
+    x = 0, y = 0;
+} 
+
+
+Point::Point(int _x, int _y) {
+    x = _x, y = _y;
 }
 
-Point::Point(const Point &p2): x(p2.x), y(p2.y)
-{
-    //ctor
-}
 
-Point::~Point()
-{
-    //dtor
-}
-
-std::ostream& operator<<(std::ostream &strm, const Point &p) {
-  return strm << "P(" <<  p.x << ", " << p.y << ")";
+Point& Point::operator=(const Point& other) {
+    x = other.x;
+    y = other.y;
+    return *this;
 }
