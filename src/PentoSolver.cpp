@@ -66,7 +66,7 @@ void AbsPentoSolver::islandCounter(char *board, int* island, int h, int w) {
         for(int j = 0; j < w; ++j) {
             int ind = i * w + j;
             if (island[ind] >= 0) { continue; }
-            if (board[ind] == PentoShapeFactory::USED) { island[ind] = 0; continue; }
+            if (board[ind] != PentoShapeFactory::EMPTY) { island[ind] = 0; continue; }
             int counter = islandCounterRec(board, visited, h, w, i, j, 0);
             islandGenerateRec(island, visited, h, w, i, j, counter);
         }
@@ -83,7 +83,7 @@ int AbsPentoSolver::islandCounterRec(char *board, bool * visited, int h, int w, 
     
     int ind = i * w + j;
 
-    if (board[ind] == PentoShapeFactory::USED) { return 0; }
+    if (board[ind] != PentoShapeFactory::EMPTY) { return 0; }
     if (visited[ind]) { return 0; }
     
     visited[ind] = true;
@@ -134,6 +134,7 @@ bool PentoSolver::recusiveSolver(int ind) {
 
     if (ind >= num_shapes) {
         std::cout << "solution found" << std::endl;
+        displayBoard(board, h + 4, w + 4);
         return true;
     }
 
@@ -184,7 +185,7 @@ bool PentoSolver::recusiveSolver(int ind) {
             
                 // se eliminan las posiciones ocupadas
                 int indb = i * (w + 4) + j;
-                if (board[indb] == PentoShapeFactory::USED) { continue; }
+                if (board[indb] != PentoShapeFactory::EMPTY) { continue; }
 
                 // std::cout << "free space" << std::endl;
 
@@ -194,7 +195,7 @@ bool PentoSolver::recusiveSolver(int ind) {
                     for (int j2 = 0; j2 < 5 && check; ++j2) {
                         if (shape[i2][j2] == PentoShapeFactory::EMPTY) { continue; }
                         int newind = (i + i2 - 2) * (w + 4) + (j + j2 - 2);
-                        if (board[newind] == PentoShapeFactory::USED) {
+                        if (board[newind] != PentoShapeFactory::EMPTY) {
                             check = false;
                         }
                     }
@@ -208,7 +209,8 @@ bool PentoSolver::recusiveSolver(int ind) {
                     for (int j2 = 0; j2 < 5 && check; ++j2) {
                         if (shape[i2][j2] == PentoShapeFactory::EMPTY) { continue; }
                         int newind = (i + i2 - 2) * (w + 4) + (j + j2 - 2);
-                        board[newind] = PentoShapeFactory::USED;
+                        // board[newind] = PentoShapeFactory::USED;
+                        board[newind] = current_shape;
                     }
                 }
 
