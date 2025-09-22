@@ -42,7 +42,18 @@ private:
 };
 
 
+class KPentoSolver : public AbsPentoSolver {
+public:
+    KPentoSolver(char* _board, int _h , int _w, char* _shapes, int _num_shapes);
+    ~KPentoSolver();
+    virtual void solve();
+private:
 
+    std::vector<std::vector<char>> tree;
+    std::vector<char> vector_shapes;
+    bool recusiveSolver();
+
+};
 
 
 #endif

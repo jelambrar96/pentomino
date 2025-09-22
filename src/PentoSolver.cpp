@@ -11,10 +11,10 @@ AbsPentoSolver::AbsPentoSolver(char* _board, int _h , int _w, char* _shapes, int
         for (int j = 0; j < nw; ++j) {
             int ind = i * nw + j;
             if (i < 2 || j < 2) {
-                board[ind] = '#';
+                board[ind] = PentoShapeFactory::USED;
             }
             else if (i >= (h + 2) || j >= (w + 2)) {
-                board[ind] = '#';
+                board[ind] = PentoShapeFactory::USED;
             }
             else {
                 int oind = (i - 2) * w + (j - 2);
@@ -66,7 +66,7 @@ void AbsPentoSolver::islandCounter(char *board, int* island, int h, int w) {
         for(int j = 0; j < w; ++j) {
             int ind = i * w + j;
             if (island[ind] >= 0) { continue; }
-            if (board[ind] == '#') { island[ind] = 0; continue; }
+            if (board[ind] == PentoShapeFactory::USED) { island[ind] = 0; continue; }
             int counter = islandCounterRec(board, visited, h, w, i, j, 0);
             islandGenerateRec(island, visited, h, w, i, j, counter);
         }
@@ -83,7 +83,7 @@ int AbsPentoSolver::islandCounterRec(char *board, bool * visited, int h, int w, 
     
     int ind = i * w + j;
 
-    if (board[ind] == '#') { return 0; }
+    if (board[ind] == PentoShapeFactory::USED) { return 0; }
     if (visited[ind]) { return 0; }
     
     visited[ind] = true;
@@ -144,7 +144,7 @@ bool PentoSolver::recusiveSolver(int ind) {
     islandCounter(board, islas, h + 4, w + 4);
     bool valid = true;
     for (int i = 0 , n = (h + 4)* (w + 4);  i < n; ++i) {
-        if (islas[ind] % 5 > 0) {
+        if (islas[i] % 5 > 0) {
             valid = false;
             break;
         }
@@ -184,7 +184,7 @@ bool PentoSolver::recusiveSolver(int ind) {
             
                 // se eliminan las posiciones ocupadas
                 int indb = i * (w + 4) + j;
-                if (board[indb] == '#') { continue; }
+                if (board[indb] == PentoShapeFactory::USED) { continue; }
 
                 // std::cout << "free space" << std::endl;
 
@@ -192,9 +192,9 @@ bool PentoSolver::recusiveSolver(int ind) {
                 bool check = true;
                 for (int i2 = 0; i2 < 5 && check; ++i2) {
                     for (int j2 = 0; j2 < 5 && check; ++j2) {
-                        if (shape[i2][j2] == ' ') { continue; }
+                        if (shape[i2][j2] == PentoShapeFactory::EMPTY) { continue; }
                         int newind = (i + i2 - 2) * (w + 4) + (j + j2 - 2);
-                        if (board[newind] == '#') {
+                        if (board[newind] == PentoShapeFactory::USED) {
                             check = false;
                         }
                     }
@@ -206,9 +206,9 @@ bool PentoSolver::recusiveSolver(int ind) {
                 // si la variante encaja se agrega a la pieza
                 for (int i2 = 0; i2 < 5 && check; ++i2) {
                     for (int j2 = 0; j2 < 5 && check; ++j2) {
-                        if (shape[i2][j2] == ' ') { continue; }
+                        if (shape[i2][j2] == PentoShapeFactory::EMPTY) { continue; }
                         int newind = (i + i2 - 2) * (w + 4) + (j + j2 - 2);
-                        board[newind] = '#';
+                        board[newind] = PentoShapeFactory::USED;
                     }
                 }
 
@@ -218,9 +218,9 @@ bool PentoSolver::recusiveSolver(int ind) {
                 // se quita la variante de la pieza
                 for (int i2 = 0; i2 < 5 && check; ++i2) {
                     for (int j2 = 0; j2 < 5 && check; ++j2) {
-                        if (shape[i2][j2] == ' ') { continue; }
+                        if (shape[i2][j2] == PentoShapeFactory::EMPTY) { continue; }
                         int newind = (i + i2 - 2) * (w + 4) + (j + j2 - 2);
-                        board[newind] = ' ';
+                        board[newind] = PentoShapeFactory::EMPTY;
                     }
                 }
 
@@ -234,4 +234,77 @@ bool PentoSolver::recusiveSolver(int ind) {
     return false;
 };
 
+// ------------------------------------------------------------------------------------------------------------------------
 
+
+KPentoSolver::KPentoSolver(char* _board, int _h , int _w, char* _shapes, int _num_shapes) 
+    : AbsPentoSolver(_board, _h, _w, _shapes, _num_shapes) {
+
+    // vector of shapes
+    vector_shapes = std::vector<char>(_num_shapes);
+    for (int i = 0; i < _num_shapes; ++i) { vector_shapes.push_back(_shapes[i]); }
+        
+    // tree
+    tree = std::vector<std::vector<char>>(25);
+    for (int i = 0; i < 25; ++i) { tree.push_back(std::vector<char>()); }
+
+    for (int k = 0; k < 63; ++k) {
+        for (int i = 0; i < 5; ++i) {
+            for (int j = 0; j < 5; ++j) {
+                char c = PentoShapeFactory::SHAPES[k][i][j];
+                if (c == PentoShapeFactory::EMPTY) { continue; }
+                char shape_char = PentoShapeFactory::CHAR_SHAPES[k];
+                
+                // DONE: add optimation if shape_char in _shapes
+                bool found = false;
+                for (int l = 0; i < _num_shapes; ++l) {
+                    if (_shapes[l] == shape_char) { found = true; break; }
+                }
+                if (!found) { continue; }
+                
+                int ind = i * 5 + j;
+                tree.at(ind).push_back(shape_char);
+            }
+        }
+    }
+}
+
+
+KPentoSolver::~KPentoSolver() {}
+
+
+void KPentoSolver::solve() {
+    recusiveSolver();
+}
+
+
+bool KPentoSolver::recusiveSolver() {
+    
+    if (vector_shapes.empty()) {
+        std::cout << "solution found" << std::endl;
+        return true;
+    }
+
+    // std::cout << ind << std::endl;
+    // displayBoard(board, h + 4, w + 4);
+
+    int * islas = new int[(h + 4)* (w + 4)];
+    islandCounter(board, islas, h + 4, w + 4);
+    bool valid = true;
+    for (int i = 0 , n = (h + 4)* (w + 4);  i < n; ++i) {
+        if (islas[i] % 5 > 0) {
+            valid = false;
+            break;
+        }
+    }
+
+    // displayBoard(board, h, w);
+    // displayBoard(islas, h + 4, w + 4);
+    // std::cout << "\n";
+
+    delete [] islas;
+    if (!valid) { return false; }
+    // 
+
+    throw;
+}
