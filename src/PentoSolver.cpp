@@ -1,7 +1,7 @@
 #include "PentoSolver.h"
 
 
-PentoSolver::PentoSolver(char* _board, int _h , int _w, char* _shapes, int _num_shapes) 
+AbsPentoSolver::AbsPentoSolver(char* _board, int _h , int _w, char* _shapes, int _num_shapes) 
     : h(_h), w(_w), num_shapes(_num_shapes) {
     
     const int nh = h + 4, nw = w + 4;
@@ -27,9 +27,100 @@ PentoSolver::PentoSolver(char* _board, int _h , int _w, char* _shapes, int _num_
 
 }
 
-PentoSolver::~PentoSolver() {
+AbsPentoSolver::~AbsPentoSolver() {
     delete [] board;
 }
+
+
+void AbsPentoSolver::displayBoard(char * board, int h, int w) {
+    for (int i = 0; i <h ; ++i) {
+        for (int j = 0; j < w; ++j) {
+            std::cout << board[i * w +  j] << " ";
+        }
+        std::cout << "\n";
+    }
+    std::cout << "\n";
+}
+
+
+void AbsPentoSolver::displayIslands(int * board, int h, int w) {
+    for (int i = 0; i <h ; ++i) {
+        for (int j = 0; j < w; ++j) {
+            std::cout << board[i * w +  j] << " ";
+        }
+        std::cout << "\n";
+    }
+    std::cout << "\n";
+}
+
+
+void AbsPentoSolver::islandCounter(char *board, int* island, int h, int w) {
+    
+    bool *visited = new bool[h * w]; 
+    for (int i = 0, n = h * w; i < n; ++i) {
+        island[i] = -1;
+        visited[i] = false;
+    }
+
+    for (int i = 0; i < h; ++i) {
+        for(int j = 0; j < w; ++j) {
+            int ind = i * w + j;
+            if (island[ind] >= 0) { continue; }
+            if (board[ind] == '#') { island[ind] = 0; continue; }
+            int counter = islandCounterRec(board, visited, h, w, i, j, 0);
+            islandGenerateRec(island, visited, h, w, i, j, counter);
+        }
+    }
+
+    delete [] visited;
+}
+
+
+int AbsPentoSolver::islandCounterRec(char *board, bool * visited, int h, int w, int i, int j, int deep) {
+    
+    if (i < 0 || i >= h) { return 0; }
+    if (j < 0 || j >= w) { return 0; }
+    
+    int ind = i * w + j;
+
+    if (board[ind] == '#') { return 0; }
+    if (visited[ind]) { return 0; }
+    
+    visited[ind] = true;
+    deep += 1;
+
+    deep += islandCounterRec(board, visited, h, w, i, j - 1, 0); // up
+    deep += islandCounterRec(board, visited, h, w, i, j + 1, 0); // down
+    deep += islandCounterRec(board, visited, h, w, i - 1, j, 0); // left
+    deep += islandCounterRec(board, visited, h, w, i + 1, j, 0); // right
+    
+    return deep;
+}
+
+
+void AbsPentoSolver::islandGenerateRec(int * island, bool * visited, int h, int w, int i, int j, int value) {
+    if (i < 0 || i >= h) { return; }
+    if (j < 0 || j >= w) { return; }
+
+    int ind = i * w + j;
+    if (island[ind] >= 0) { return; }
+    if (!visited[ind]) { return; }
+
+    island[ind] = value;
+    islandGenerateRec(island, visited, h, w, i, j - 1, value); // up
+    islandGenerateRec(island, visited, h, w, i, j + 1, value); // down
+    islandGenerateRec(island, visited, h, w, i - 1, j, value); // left
+    islandGenerateRec(island, visited, h, w, i + 1, j, value); // right
+}
+
+// ----------------------------------------------------------------------------------------------------------------
+
+
+PentoSolver::PentoSolver(char* _board, int _h , int _w, char* _shapes, int _num_shapes) 
+    : AbsPentoSolver(_board, _h, _w, _shapes, _num_shapes) {}
+
+PentoSolver::~PentoSolver() {}
+
 
 void PentoSolver::solve() {
 
@@ -144,82 +235,3 @@ bool PentoSolver::recusiveSolver(int ind) {
 };
 
 
-void PentoSolver::displayBoard(char * board, int h, int w) {
-    for (int i = 0; i <h ; ++i) {
-        for (int j = 0; j < w; ++j) {
-            std::cout << board[i * w +  j] << " ";
-        }
-        std::cout << "\n";
-    }
-    std::cout << "\n";
-}
-
-void PentoSolver::displayBoard(int * board, int h, int w) {
-    for (int i = 0; i <h ; ++i) {
-        for (int j = 0; j < w; ++j) {
-            std::cout << board[i * w +  j] << " ";
-        }
-        std::cout << "\n";
-    }
-    std::cout << "\n";
-}
-
-
-void PentoSolver::islandCounter(char *board, int* island, int h, int w) {
-    
-    bool *visited = new bool[h * w]; 
-    for (int i = 0, n = h * w; i < n; ++i) {
-        island[i] = -1;
-        visited[i] = false;
-    }
-
-    for (int i = 0; i < h; ++i) {
-        for(int j = 0; j < w; ++j) {
-            int ind = i * w + j;
-            if (island[ind] >= 0) { continue; }
-            if (board[ind] == '#') { island[ind] = 0; continue; }
-            int counter = islandCounterRec(board, visited, h, w, i, j, 0);
-            islandGenerateRec(island, visited, h, w, i, j, counter);
-        }
-    }
-
-    delete [] visited;
-}
-
-
-int PentoSolver::islandCounterRec(char *board, bool * visited, int h, int w, int i, int j, int deep) {
-    
-    if (i < 0 || i >= h) { return 0; }
-    if (j < 0 || j >= w) { return 0; }
-    
-    int ind = i * w + j;
-
-    if (board[ind] == '#') { return 0; }
-    if (visited[ind]) { return 0; }
-    
-    visited[ind] = true;
-    deep += 1;
-
-    deep += islandCounterRec(board, visited, h, w, i, j - 1, 0); // up
-    deep += islandCounterRec(board, visited, h, w, i, j + 1, 0); // down
-    deep += islandCounterRec(board, visited, h, w, i - 1, j, 0); // left
-    deep += islandCounterRec(board, visited, h, w, i + 1, j, 0); // right
-    
-    return deep;
-}
-
-
-void PentoSolver::islandGenerateRec(int * island, bool * visited, int h, int w, int i, int j, int value) {
-    if (i < 0 || i >= h) { return; }
-    if (j < 0 || j >= w) { return; }
-
-    int ind = i * w + j;
-    if (island[ind] >= 0) { return; }
-    if (!visited[ind]) { return; }
-
-    island[ind] = value;
-    islandGenerateRec(island, visited, h, w, i, j - 1, value); // up
-    islandGenerateRec(island, visited, h, w, i, j + 1, value); // down
-    islandGenerateRec(island, visited, h, w, i - 1, j, value); // left
-    islandGenerateRec(island, visited, h, w, i + 1, j, value); // right
-}

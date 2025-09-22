@@ -79,6 +79,22 @@ const char PentoShapeFactory::SHAPES[63][5][5] = {
 };
 
 
+const char PentoShapeFactory::CHAR_SHAPES[63] = {
+    'X', 
+    'I', 'I', 
+    'Z', 'Z', 'Z', 'Z', 
+    'V', 'V', 'V', 'V', 
+    'W', 'W', 'W', 'W', 
+    'T', 'T', 'T', 'T', 
+    'U', 'U', 'U', 'U', 
+    'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 
+    'F', 'F', 'F', 'F', 'F', 'F', 'F', 'F', 
+    'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 
+    'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 
+    'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P' 
+};
+
+
 int PentoShapeFactory::getNUmbers(char c) {
     switch (c) {
     case 'X':

@@ -9,6 +9,7 @@ public:
     static const char USED  = '#';
 
     static const char SHAPES[63][5][5]; 
+    static const char CHAR_SHAPES[63];
 
     static int getShapes(char c);
     static int getNUmbers(char c);
