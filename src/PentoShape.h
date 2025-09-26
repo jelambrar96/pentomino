@@ -8,6 +8,8 @@ public:
     static const char EMPTY = ' ';
     static const char USED  = '#';
 
+    static const int SHAPE_TOTAL_NUMBER = 63;
+
     static const char SHAPES[63][5][5]; 
     static const char CHAR_SHAPES[63];
 
