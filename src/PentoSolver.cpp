@@ -175,9 +175,9 @@ bool PentoSolver::recusiveSolver(int ind) {
                 
                 // se lee la pieza
                 char shape[5][5];
-                for (int i = 0; i < 5; ++i) {
-                    for (int j = 0; j < 5; ++j) {
-                        shape[i][j] = PentoShapeFactory::SHAPES[indk][i][j];
+                for (int i2 = 0; i2 < 5; ++i2) {
+                    for (int j2 = 0; j2 < 5; ++j2) {
+                        shape[i2][j2] = PentoShapeFactory::SHAPES[indk][i2][j2];
                     }
                 }
         
@@ -247,8 +247,8 @@ KPentoSolver::KPentoSolver(char* _board, int _h , int _w, char* _shapes, int _nu
     for (int i = 0; i < _num_shapes; ++i) { vector_shapes.push_back(_shapes[i]); }
         
     // tree
-    tree = std::vector<std::vector<char>>(25);
-    for (int i = 0; i < 25; ++i) { tree.push_back(std::vector<char>()); }
+    tree = std::vector<std::vector<int>>(25);
+    for (int i = 0; i < 25; ++i) { tree.push_back(std::vector<int>()); }
 
     for (int k = 0; k < 63; ++k) {
         for (int i = 0; i < 5; ++i) {
@@ -265,7 +265,7 @@ KPentoSolver::KPentoSolver(char* _board, int _h , int _w, char* _shapes, int _nu
                 if (!found) { continue; }
                 
                 int ind = i * 5 + j;
-                tree.at(ind).push_back(shape_char);
+                tree.at(ind).push_back(k);
             }
         }
     }
@@ -307,6 +307,23 @@ bool KPentoSolver::recusiveSolver() {
     delete [] islas;
     if (!valid) { return false; }
     // 
+
+
+    // para cada una de las posiciones del tablero
+    for (int i = 2, ilimit = h + 2; i < ilimit; ++i) {
+        for (int j = 2, jlimit = w + 2; j < jlimit; ++j) {
+
+            std::vector<char> copy_vector_shape = vector_shapes;
+
+            // 
+            for (int i2 = 0; i2 < 5; ++i2) {
+                for (int j2 = 0; j2 < 5; ++j2) {
+                    
+                }
+            }
+
+        }
+    }
 
     throw;
 }

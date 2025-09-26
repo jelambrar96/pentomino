@@ -49,7 +49,7 @@ public:
     virtual void solve();
 private:
 
-    std::vector<std::vector<char>> tree;
+    std::vector<std::vector<int>> tree;
     std::vector<char> vector_shapes;
     bool recusiveSolver();
 

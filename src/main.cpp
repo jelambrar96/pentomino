@@ -9,8 +9,8 @@ int main() {
 
     // return 0;
 
-    int h = 3;
-    int w = 20;
+    int h = 4;
+    int w = 15;
     int n_shapes = 12;
     char shapes[n_shapes] = {'X', 'I', 'Z', 'V', 'W', 'T', 'U', 'N', 'F', 'L', 'Y', 'P'};
 
